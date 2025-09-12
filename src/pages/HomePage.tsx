@@ -91,10 +91,12 @@ const HomePage = () => {
   const getAvailableRoutes = () => {
     if (!selectedRoute) return allRoutes;
     
-    return allRoutes.filter(route => 
-      route.stops.includes(selectedRoute.from) && 
-      route.stops.includes(selectedRoute.to)
-    );
+    return allRoutes.filter(route => {
+      const fromIndex = route.stops.indexOf(selectedRoute.from);
+      const toIndex = route.stops.indexOf(selectedRoute.to);
+      // Route must contain both stops
+      return fromIndex !== -1 && toIndex !== -1;
+    });
   };
 
   const handleRouteSelection = (from: string, to: string) => {
