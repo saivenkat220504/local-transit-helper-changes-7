@@ -20,7 +20,7 @@ const AuthGate = () => {
             </p>
           </CardHeader>
           <CardContent>
-            <SignInButton mode="modal" fallbackRedirectUrl="/">
+            <SignInButton mode="modal" forceRedirectUrl="/?selectRole=1">
               <Button className="w-full bg-transit-primary hover:bg-transit-primary/90 text-white">
                 <LogIn className="w-4 h-4 mr-2" />
                 Sign in with Google

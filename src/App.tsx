@@ -24,12 +24,22 @@ const App = () => {
 
   useEffect(() => {
     if (user) {
-      // Check if user has a role saved in localStorage
+      // If redirected after OAuth, force role selection and clear any previous role
+      const url = new URL(window.location.href);
+      const selectRole = url.searchParams.get("selectRole");
+      if (selectRole === "1") {
+        localStorage.removeItem("userRole");
+        setUserRole(null);
+        // Clean URL without reloading
+        window.history.replaceState({}, document.title, url.pathname + url.hash);
+        return;
+      }
+
+      // Otherwise, use saved role if available
       const savedRole = localStorage.getItem("userRole");
       if (savedRole) {
         setUserRole(savedRole);
       } else {
-        // Clear any existing role if user changes
         setUserRole(null);
       }
     } else {
