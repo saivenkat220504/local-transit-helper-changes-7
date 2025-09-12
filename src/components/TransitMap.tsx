@@ -279,11 +279,20 @@ const TransitMap = ({ isLowBandwidth = false, trackedBuses = [], onRouteSelect }
       </div>
 
       {/* Map Container */}
-      <div 
-        ref={mapRef}
-        className="h-80 w-full bg-gray-100"
-        style={{ minHeight: '320px' }}
-      />
+      <div className="relative">
+        <div 
+          ref={mapRef}
+          className="h-80 w-full bg-gray-100"
+          style={{ minHeight: '320px' }}
+        />
+        {isRouteVisible && (
+          <div className="absolute top-2 left-2 bg-background/90 backdrop-blur-sm px-3 py-2 rounded-lg shadow-lg border border-border/50">
+            <p className="text-sm font-medium text-foreground">
+              Route: {busStops.find(s => s.id === fromStop)?.name} → {busStops.find(s => s.id === toStop)?.name}
+            </p>
+          </div>
+        )}
+      </div>
       
       {/* Map Info */}
       <div className="p-4">

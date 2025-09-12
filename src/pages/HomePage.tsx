@@ -94,8 +94,8 @@ const HomePage = () => {
     return allRoutes.filter(route => {
       const fromIndex = route.stops.indexOf(selectedRoute.from);
       const toIndex = route.stops.indexOf(selectedRoute.to);
-      // Route must contain both stops
-      return fromIndex !== -1 && toIndex !== -1;
+      // Route must contain both stops and they should be in correct order (from before to)
+      return fromIndex !== -1 && toIndex !== -1 && fromIndex < toIndex;
     });
   };
 
@@ -150,10 +150,13 @@ const HomePage = () => {
               <Bus className="w-5 h-5 text-transit-primary" />
               <h2 className="text-lg font-semibold text-foreground">
                 {selectedRoute 
-                  ? `Buses for ${selectedRoute.from} → ${selectedRoute.to} (${availableRoutes.length})`
-                  : `All Routes (${availableRoutes.length})`
+                  ? `Available Buses: ${selectedRoute.from} → ${selectedRoute.to}`
+                  : `All Routes`
                 }
               </h2>
+              <span className="bg-transit-primary/10 text-transit-primary px-2 py-1 rounded-full text-sm font-medium">
+                {availableRoutes.length} {availableRoutes.length === 1 ? 'route' : 'routes'}
+              </span>
             </div>
             <div className="flex items-center gap-4">
               <button className="bg-card text-foreground px-4 py-2 rounded-lg border border-border/50 hover:bg-surface-secondary transition-colors">
@@ -166,10 +169,18 @@ const HomePage = () => {
           </div>
 
           {selectedRoute && availableRoutes.length === 0 && (
-            <div className="bg-surface-secondary rounded-lg p-4 text-center">
-              <Bus className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
-              <p className="text-muted-foreground">No buses available for this route</p>
-              <p className="text-sm text-muted-foreground mt-1">Try selecting different stops</p>
+            <div className="bg-surface-secondary rounded-lg p-6 text-center">
+              <Bus className="w-12 h-12 text-muted-foreground mx-auto mb-3" />
+              <p className="text-lg font-medium text-foreground mb-2">No direct buses available</p>
+              <p className="text-sm text-muted-foreground">
+                No buses serve the direct route from <span className="font-medium">{selectedRoute.from}</span> to <span className="font-medium">{selectedRoute.to}</span>
+              </p>
+              <button 
+                onClick={() => setSelectedRoute(null)}
+                className="mt-4 px-4 py-2 bg-transit-primary text-white rounded-lg text-sm hover:bg-transit-primary/90 transition-colors"
+              >
+                View All Routes
+              </button>
             </div>
           )}
 
