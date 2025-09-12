@@ -23,10 +23,18 @@ const App = () => {
   const { user } = useUser();
 
   useEffect(() => {
-    // Check if user has a role saved in localStorage
-    const savedRole = localStorage.getItem("userRole");
-    if (savedRole) {
-      setUserRole(savedRole);
+    if (user) {
+      // Check if user has a role saved in localStorage
+      const savedRole = localStorage.getItem("userRole");
+      if (savedRole) {
+        setUserRole(savedRole);
+      } else {
+        // Clear any existing role if user changes
+        setUserRole(null);
+      }
+    } else {
+      // Clear role when user signs out
+      setUserRole(null);
     }
   }, [user]);
 

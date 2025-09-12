@@ -16,11 +16,12 @@ interface BusStop {
 interface TransitMapProps {
   isLowBandwidth?: boolean;
   trackedBuses?: Array<{ routeNumber: string; lat: number; lng: number; }>;
+  onRouteSelect?: (from: string, to: string) => void;
 }
 
 const MAPBOX_API_KEY = 'pk.eyJ1IjoibmlzaGFudGhuaXRpc2giLCJhIjoiY21mZ2Z2a25xMDBkNjJqc2wycGV5ZDB0NCJ9.wOFw5YG9sozJmkxTPZulXQ';
 
-const TransitMap = ({ isLowBandwidth = false, trackedBuses = [] }: TransitMapProps) => {
+const TransitMap = ({ isLowBandwidth = false, trackedBuses = [], onRouteSelect }: TransitMapProps) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
   const routingControlRef = useRef<any>(null);
@@ -158,6 +159,11 @@ const TransitMap = ({ isLowBandwidth = false, trackedBuses = [] }: TransitMapPro
     const toStopData = busStops.find(s => s.id === toStop);
 
     if (!fromStopData || !toStopData) return;
+
+    // Notify parent component about route selection
+    if (onRouteSelect) {
+      onRouteSelect(fromStopData.name, toStopData.name);
+    }
 
     // Ensure Routing Machine is loaded after L is global
     if (!(window as any).L?.Routing) {
